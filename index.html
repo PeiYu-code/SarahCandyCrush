@@ -149,13 +149,35 @@
     <div class="grid-container" id="grid"></div>
 
     <script>
-        const rawWords = [
-            "surgery", "restrict", "fatal", "operation", "drill", "metal",
-            "gap", "guarantee", "waist", "internal", "organ", "permanently",
-            "accident", "unappealing", "pale", "unpleasant", "strengthen",
-            "cheerful", "advantage", "measure", "multiple", "proper",
-            "pursue", "strike", "dumb", "sacrifice"
-        ];
+      const rawWords = [
+  // 第一張圖片 (61個)
+  "book", "letter", "pen", "pencil", "eraser", "desk", "computer", "cup",
+  "boss", "sea", "ship", "boat", "sky", "sun", "moon", "library",
+  "movie", "tea", "milk", "cheese", "butter", "game", "baby", "kid",
+  "smile", "laugh", "duck", "chicken", "hen", "egg", "pig", "cow",
+  "rabbit", "elephant", "dog", "cat", "insect", "head", "eye", "nose",
+  "ear", "mouth", "body", "hand", "leave", "leave A for B", "end", "start",
+  "begin", "feel", "follow", "turn", "hold", "keep", "put", "bring",
+  "point", "line", "let", "try", "move",
+
+  // 第二張圖片 (121個)
+  "boy", "girl", "I", "you", "he", "she", "it", "we", "they", "teacher",
+  "student", "doctor", "nurse", "patient", "housewife", "house", "school",
+  "park", "table", "chair", "meal", "breakfast", "lunch", "dinner", "man",
+  "woman", "shoe", "bag", "cake", "doll", "bean", "bed", "door", "window",
+  "gate", "bus", "stop", "car", "road", "street", "belt", "reason", "story",
+  "city", "run", "eat", "like", "go", "come", "walk", "have", "write", "read",
+  "drink", "sleep", "open", "close", "buy", "sell", "cry", "dance", "want",
+  "love", "say", "make", "rain", "get", "teach", "am", "is", "are", "take",
+  "find", "use", "think", "own", "live", "work", "thank", "become", "tell",
+  "ask", "show", "call", "beautiful", "ugly", "long", "short", "good", "bad",
+  "enough", "hot", "cold", "high", "low", "important", "crazy", "big", "all",
+  "hard", "old", "young", "new", "cute", "busy", "nice", "useful", "useless",
+  "well", "great", "sorry", "most", "front", "back", "here", "there", "in",
+  "out of", "on", "under", "between", "in front of", "in back of", "also",
+  "only", "next", "now", "o'clock", "else", "for", "then", "about", "even",
+  "just", "still", "another", "while", "will", "can", "how"
+];
 
         let currentBatchWords = [];
         let availableIndices = [];
