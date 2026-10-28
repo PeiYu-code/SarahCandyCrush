@@ -17,7 +17,6 @@
             box-sizing: border-box;
             position: relative;
         }
-        /* 右上角計時器樣式 */
         .timer-box {
             position: absolute;
             top: 15px;
@@ -85,7 +84,6 @@
         }
         .grid-container {
             display: grid;
-            /* 8 行，排版為 8x8 共 64 個位置 */
             grid-template-columns: repeat(8, 1fr);
             gap: 8px;
             max-width: 1050px;
@@ -146,7 +144,6 @@
 </head>
 <body>
 
-    <!-- 右上角計時器 -->
     <div class="timer-box">
         ⏱️ <span id="timerDisplay">00:00</span>
     </div>
@@ -156,4 +153,140 @@
         <button id="nextBtn" class="btn-next" onclick="drawNextWord()">Next</button>
         <div class="status" id="statusText">載入中...</div>
     </div>
-    <div class="grid-container
+    <div class="grid-container" id="grid"></div>
+
+    <script>
+        const rawWords = [
+            "book", "letter", "pen", "pencil", "eraser", "desk", "computer", "cup", "boss", "sea", "ship", "boat", "sky", "sun", "moon", "library", "movie", "tea", "milk", "cheese", "butter", "game", "baby", "kid", "smile", "laugh", "duck", "chicken", "hen", "egg", "pig", "cow", "rabbit", "elephant", "dog", "cat", "insect", "head", "eye", "nose", "ear", "mouth", "body", "hand", "leave", "leave A for B", "end", "start", "begin", "feel", "follow", "turn", "hold", "keep", "put", "bring", "point", "line", "let", "try", "move",
+            "boy", "girl", "I", "you", "he", "she", "it", "we", "they", "teacher", "student", "doctor", "nurse", "patient", "house", "school", "which", "who", "why", "where", "when", "what", "how", "a lot", "about", "action", "actor", "afraid", "after", "afternoon", "again", "ago", "agree", "air", "airplane", "all", "almost", "already", "also",
+            "always", "America", "American", "and", "angry", "animal", "another", "answer", "ant", "any",
+            "actress", "age", "ahead", "airport", "a few", "a little", "a.m.", "able", "above", "abroad", "across", "act",
+            "anyone", "anything", "apartment", "appear", "apple", "April", "arm", "around", "arrive", "art",
+            "as", "ask", "at", "attack", "August", "aunt", "autumn", "away", "back",
+            "bad", "badminton", "bag", "bake", "bakery", "balcony", "ball", "banana", "band", "bank",
+            "barbecue", "base", "baseball", "basket", "basketball", "bat", "bath", "bathroom", "be", "beach",
+            "bean", "bear", "beautiful", "because", "become", "bed", "bedroom", "bee", "beef", "before",
+            "behind", "believe", "bell", "belong", "below", "belt", "bench", "beside", "between",
+            "bicycle", "big", "bird", "birthday", "bite", "black", "blackboard", "blanket", "blind", "block",
+            "blow", "blue", "boil", "bookstore", "bored", "boring", "born",
+            "borrow", "both", "bottle", "bottom", "bow", "bowl", "box", "bread",
+            "break", "breakfast", "bridge", "bright", "brother", "brown", "brush", "bug", "build",
+            "bun", "burn", "bus", "business", "businessman", "busy", "but", "butterfly", "buy",
+            "by", "cage", "cake", "call", "camera", "camp", "can", "candle", "candy", "cap",
+            "car", "card", "care", "careful", "carry", "case", "castle", "catch", "celebrate",
+            "cellphone", "cent", "center", "centimeter", "chair", "chalk", "chance", "change", "cheap", "cheat",
+            "check", "cheer", "cheese", "chess", "child", "China", "Chinese", "chocolate", "choose",
+            "chopsticks", "Christmas", "church", "circle", "city", "clap", "class", "classmate", "classroom", "clean",
+            "clear", "clerk", "climb", "clock", "close", "clothes", "cloudy", "club", "coat", "coffee",
+            "cola", "cold", "collect", "color", "comb", "come", "comfortable", "comic", "common",
+            "convenient", "cook", "cookie", "cool", "copy", "corner", "correct", "cost", "couch", "count",
+            "country", "course", "cousin", "cover", "crazy", "cross", "cry", "cut"
+        ];
+
+        let currentBatchWords = [];
+        let availableIndices = [];
+        let currentActiveIndex = null;
+
+        let timerInterval = null;
+        let secondsElapsed = 0;
+        let isTimerStarted = false;
+
+        const gridElement = document.getElementById('grid');
+        const statusText = document.getElementById('statusText');
+        const nextBtn = document.getElementById('nextBtn');
+        const timerDisplay = document.getElementById('timerDisplay');
+
+        function shuffle(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function startTimer() {
+            if (isTimerStarted) return;
+            isTimerStarted = true;
+            secondsElapsed = 0;
+            timerInterval = setInterval(() => {
+                secondsElapsed++;
+                const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+                const secs = String(secondsElapsed % 60).padStart(2, '0');
+                timerDisplay.innerText = `${mins}:${secs}`;
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        function initGrid() {
+            gridElement.innerHTML = '';
+            availableIndices = [];
+            stopTimer();
+            isTimerStarted = false;
+            secondsElapsed = 0;
+            timerDisplay.innerText = "00:00";
+            
+            const uniqueWords = Array.from(new Set(rawWords));
+            const shuffledAll = shuffle(uniqueWords);
+            
+            const targetCount = Math.min(64, uniqueWords.length);
+            currentBatchWords = shuffledAll.slice(0, targetCount);
+
+            currentBatchWords.forEach((word, index) => {
+                availableIndices.push(index);
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.id = `card-${index}`;
+                card.innerText = word;
+                gridElement.appendChild(card);
+            });
+            updateStatus();
+        }
+
+        function drawNextWord() {
+            startTimer();
+
+            if (currentActiveIndex !== null) {
+                const previousCard = document.getElementById(`card-${currentActiveIndex}`);
+                if (previousCard) {
+                    previousCard.classList.remove('active');
+                    previousCard.classList.add('used');
+                }
+            }
+
+            if (availableIndices.length === 0) {
+                stopTimer();
+                const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+                const secs = String(secondsElapsed % 60).padStart(2, '0');
+                
+                alert(`太棒了！本輪所有單字都測驗完畢囉！\n⏱️ 總共耗時：${mins} 分 ${secs} 秒`);
+                nextBtn.disabled = true;
+                nextBtn.innerText = "Finish!";
+                return;
+            }
+
+            const randomIndexPosition = Math.floor(Math.random() * availableIndices.length);
+            const selectedWordIndex = availableIndices[randomIndexPosition];
+            
+            const currentCard = document.getElementById(`card-${selectedWordIndex}`);
+            currentCard.classList.add('active');
+            currentActiveIndex = selectedWordIndex;
+
+            availableIndices.splice(randomIndexPosition, 1);
+            updateStatus();
+        }
+
+        function updateStatus() {
+            statusText.innerText = `本輪還剩 ${availableIndices.length} / ${currentBatchWords.length} 個單字`;
+        }
+
+        initGrid();
+    </script>
+</body>
+</html>
