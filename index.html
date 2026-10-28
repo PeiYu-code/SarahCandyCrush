@@ -160,7 +160,7 @@
 
     <script>
         const rawWords = [
-            // 您手打的單字清單 (第一、二部分共 100 個)
+            // 您手打的第一、二部分單字
             "book", "letter", "pen", "pencil", "eraser", "desk", "computer", "cup", "boss", "sea", "ship", "boat", "sky", "sun", "moon", "library", "movie", "tea", "milk", "cheese", "butter", "game", "baby", "kid", "smile", "laugh", "duck", "chicken", "hen", "egg", "pig", "cow", "rabbit", "elephant", "dog", "cat", "insect", "head", "eye", "nose", "ear", "mouth", "body", "hand", "leave", "leave A for B", "end", "start", "begin", "feel", "follow", "turn", "hold", "keep", "put", "bring", "point", "line", "let", "try", "move",
             "boy", "girl", "I", "you", "he", "she", "it", "we", "they", "teacher", "student", "doctor", "nurse", "patient", "house", "school", "which", "who", "why", "where", "when", "what", "how", "a lot", "about", "action", "actor", "afraid", "after", "afternoon", "again", "ago", "agree", "air", "airplane", "all", "almost", "already", "also",
 
@@ -243,7 +243,7 @@
             const uniqueWords = Array.from(new Set(rawWords));
             const shuffledAll = shuffle(uniqueWords);
             
-            // 目標 64 個單字 (8x8)
+            // 嚴格設定為 64 個單字 (8x8)
             const targetCount = Math.min(64, uniqueWords.length);
             currentBatchWords = shuffledAll.slice(0, targetCount);
 
